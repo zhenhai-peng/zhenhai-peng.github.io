@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "首页",
+    "blog": "博客"
+  },
+  "home": {
+    "greeting": "你好，我是",
+    "role": "软件工程师",
+    "bio": "我构建互联网产品，同时记录学习路上的所思所想。热爱简洁的代码、精心的设计，偶尔也会深入研究一些有趣的技术问题。",
+    "cta_blog": "阅读博客",
+    "cta_github": "GitHub",
+    "latest_posts": "最新文章",
+    "all_posts": "所有文章"
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "关于软件、技术和生活的思考。",
+    "read_more": "阅读更多",
+    "back": "← 返回博客",
+    "no_translation": "暂无翻译",
+    "published": "发布于",
+    "minutes_read": "分钟阅读",
+    "also_available": "本文亦有",
+    "in_chinese": "中文版",
+    "in_english": "英文版"
+  },
+  "footer": {
+    "rights": "版权所有。"
+  }
+}

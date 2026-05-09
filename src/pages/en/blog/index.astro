@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+import { getCollection } from 'astro:content';
+import { t, getPostSlug } from '../../../i18n/utils';
+
+const lang = 'en' as const;
+
+const allPosts = await getCollection('blog', ({ slug, data }) => {
+  return slug.endsWith('/en') && !data.draft;
+});
+
+const posts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout
+  title={`Blog — Zhenhai Peng`}
+  description={t(lang, 'blog.subtitle')}
+  lang={lang}
+  translationPath="/zh/blog/"
+>
+  <div class="mx-auto max-w-7xl px-4 pt-32 pb-28 lg:px-6">
+
+    <!-- Page Header -->
+    <div class="mb-16">
+      <div class="mb-4 flex items-center gap-3">
+        <div class="h-px w-7 bg-gold"></div>
+        <span class="font-mono text-xs tracking-[0.25em] uppercase text-gold-dim">writing</span>
+      </div>
+      <h1 class="font-display text-5xl font-light text-ink-100 md:text-6xl">
+        {t(lang, 'blog.title')}
+      </h1>
+      <p class="mt-4 text-ink-500">{t(lang, 'blog.subtitle')}</p>
+    </div>
+
+    <!-- Posts -->
+    {posts.length === 0 ? (
+      <p class="text-ink-600 font-mono text-sm">No posts yet.</p>
+    ) : (
+      <div class="grid gap-4 sm:grid-cols-2">
+        {posts.map(post => {
+          const slug = getPostSlug(post.slug);
+          return (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              href={`/${lang}/blog/${slug}/`}
+              date={post.data.pubDate}
+              tags={post.data.tags}
+              lang={lang}
+            />
+          );
+        })}
+      </div>
+    )}
+  </div>
+</BaseLayout>

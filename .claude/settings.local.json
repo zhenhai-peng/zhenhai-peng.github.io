@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(brew upgrade:*)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(node -e ' *)",
+      "Bash(npx astro *)",
+      "Bash(curl -s http://localhost:4321/en/)",
+      "Bash(curl -s http://localhost:4321/en/blog/)",
+      "Bash(curl -s http://localhost:4321/en/blog/hello-world/)",
+      "Bash(curl -s http://localhost:4321/zh/blog/hello-world/)"
+    ]
+  }
+}

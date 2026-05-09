@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { t, getPostSlug } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ slug, data }) => {
+    return slug.endsWith('/zh') && !data.draft;
+  });
+
+  return allPosts.map(post => {
+    const slug = getPostSlug(post.slug);
+    return {
+      params: { slug },
+      props: { post },
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const lang = 'zh' as const;
+const slug = getPostSlug(post.slug);
+
+// Check if English translation exists
+const allPosts = await getCollection('blog');
+const hasEnTranslation = allPosts.some(p => p.slug === `${slug}/en`);
+const translationPath = hasEnTranslation ? `/en/blog/${slug}/` : null;
+
+const formattedDate = post.data.pubDate.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Estimate reading time for Chinese (chars per minute)
+const chars = post.body.replace(/\s/g, '').length;
+const readingTime = Math.max(1, Math.ceil(chars / 400));
+---
+
+<BaseLayout
+  title={`${post.data.title} — Zhenhai Peng`}
+  description={post.data.description}
+  lang={lang}
+  translationPath={translationPath}
+>
+  <article class="mx-auto max-w-3xl px-4 pb-28 pt-32 lg:px-6">
+
+    <!-- Back link -->
+    <a
+      href={`/${lang}/blog/`}
+      class="mb-10 inline-flex items-center gap-2 font-mono text-xs text-ink-600 transition-colors hover:text-ink-300"
+    >
+      {t(lang, 'blog.back')}
+    </a>
+
+    <!-- Post Header -->
+    <header class="mb-12">
+      {post.data.tags.length > 0 && (
+        <div class="mb-4 flex flex-wrap gap-1.5">
+          {post.data.tags.map(tag => (
+            <span class="rounded border border-ink-700/40 bg-ink-800/60 px-2 py-0.5 font-mono text-[10px] text-ink-600">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <h1 class="font-display text-4xl font-medium leading-tight text-ink-100 md:text-5xl">
+        {post.data.title}
+      </h1>
+
+      <p class="mt-4 text-base text-ink-500 leading-relaxed">
+        {post.data.description}
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-4 border-t border-ink-800 pt-6">
+        <time datetime={post.data.pubDate.toISOString()} class="font-mono text-xs text-ink-600">
+          {t(lang, 'blog.published')} {formattedDate}
+        </time>
+        <span class="text-ink-800">·</span>
+        <span class="font-mono text-xs text-ink-600">
+          {readingTime} {t(lang, 'blog.minutes_read')}
+        </span>
+
+        {translationPath && (
+          <>
+            <span class="text-ink-800">·</span>
+            <a
+              href={translationPath}
+              class="font-mono text-xs text-gold-dim transition-colors hover:text-gold"
+            >
+              {t(lang, 'blog.also_available')} {t(lang, 'blog.in_english')} →
+            </a>
+          </>
+        )}
+      </div>
+    </header>
+
+    <!-- Post Content -->
+    <div class="prose prose-ink prose-base max-w-none">
+      <Content />
+    </div>
+
+    <!-- Post Footer -->
+    <footer class="mt-16 border-t border-ink-800 pt-10">
+      <a
+        href={`/${lang}/blog/`}
+        class="inline-flex items-center gap-2 font-mono text-xs text-ink-600 transition-colors hover:text-gold"
+      >
+        {t(lang, 'blog.back')}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

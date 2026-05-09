@@ -1,0 +1,82 @@
+---
+interface Props {
+  phrases: string[];
+  speed?: number;
+  deleteSpeed?: number;
+  pauseTime?: number;
+  loop?: boolean;
+  once?: boolean;
+  class?: string;
+  id: string;
+}
+
+const {
+  phrases,
+  speed = 55,
+  deleteSpeed = 28,
+  pauseTime = 2200,
+  loop = true,
+  once = false,
+  class: className = '',
+  id,
+} = Astro.props;
+---
+
+<span
+    id={id}
+    class={`typewriter-target ${className}`}
+    data-phrases={JSON.stringify(phrases)}
+    data-speed={speed}
+    data-delete-speed={deleteSpeed}
+    data-pause-time={pauseTime}
+    data-loop={String(loop)}
+    data-once={String(once)}
+  ></span><span class="ml-0.5 inline-block h-[0.85em] w-0.5 translate-y-px bg-current opacity-100 [animation:tw-blink_1s_step-end_infinite]"></span>
+
+<style>
+  @keyframes tw-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.typewriter-target').forEach(el => {
+    const phrases: string[] = JSON.parse(el.dataset.phrases!);
+    const speed       = parseInt(el.dataset.speed!);
+    const deleteSpeed = parseInt(el.dataset.deleteSpeed!);
+    const pauseTime   = parseInt(el.dataset.pauseTime!);
+    const loop        = el.dataset.loop === 'true';
+    const once        = el.dataset.once === 'true';
+
+    let phraseIdx = 0;
+    let charIdx   = 0;
+    let deleting  = false;
+
+    function tick() {
+      const phrase = phrases[phraseIdx];
+
+      if (deleting) {
+        el.textContent = phrase.slice(0, --charIdx);
+      } else {
+        el.textContent = phrase.slice(0, ++charIdx);
+      }
+
+      if (!deleting && charIdx === phrase.length) {
+        if (once || (!loop && phraseIdx === phrases.length - 1)) return;
+        setTimeout(() => { deleting = true; tick(); }, pauseTime);
+        return;
+      }
+
+      if (deleting && charIdx === 0) {
+        deleting  = false;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+      }
+
+      setTimeout(tick, deleting ? deleteSpeed : speed + Math.random() * 20);
+    }
+
+    // Slight initial delay so it starts after page load
+    setTimeout(tick, 400 + Math.random() * 200);
+  });
+</script>

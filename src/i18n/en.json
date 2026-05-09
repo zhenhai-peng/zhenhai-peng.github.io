@@ -1,0 +1,30 @@
+{
+  "nav": {
+    "home": "Home",
+    "blog": "Blog"
+  },
+  "home": {
+    "greeting": "Hello, I'm",
+    "role": "Software Engineer",
+    "bio": "I build things for the web and write about what I learn along the way. Passionate about clean code, thoughtful design, and the occasional deep dive.",
+    "cta_blog": "Read My Blog",
+    "cta_github": "GitHub",
+    "latest_posts": "Latest Writing",
+    "all_posts": "All Posts"
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Thoughts on software, technology, and life.",
+    "read_more": "Read More",
+    "back": "← Back to Blog",
+    "no_translation": "No translation available",
+    "published": "Published",
+    "minutes_read": "min read",
+    "also_available": "Also available in",
+    "in_chinese": "Chinese",
+    "in_english": "English"
+  },
+  "footer": {
+    "rights": "All rights reserved."
+  }
+}
